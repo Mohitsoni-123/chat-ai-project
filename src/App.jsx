@@ -21,7 +21,11 @@ function App() {
       if (question) {
         if (localStorage.getItem("history")) {
           let history = JSON.parse(localStorage.getItem("history"));
+          history=history.slice(0,15)
           history = [question, ...history];
+          history=history.map((item)=>
+          item.charAt(0).toUpperCase()+item.slice(1))
+          history=[...new Set(history)]
           localStorage.setItem("history", JSON.stringify(history));
           setRecentHistory(history);
         } else {
@@ -142,7 +146,7 @@ function App() {
               </ul>
             </div>
           </div>
-          <div className="dark:bg-zinc-700 bg-gray-300   w-1/2 p-1 pr-5 dark:text-white text-zinc-900 m-auto rounded-4xl border dark:border-white border-black h-14 flex mt-25">
+          <div className="dark:bg-zinc-700 bg-gray-300   w-1/2 p-1 pr-5 dark:text-white text-zinc-900 m-auto rounded-4xl border dark:border-white border-black h-13 flex mt-20">
             <input
               type="text"
               value={question}
