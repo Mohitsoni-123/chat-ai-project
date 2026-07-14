@@ -108,17 +108,18 @@ function App() {
 
   return (
     <div className={darkMode === "dark" ? "dark" : "light"}>
-      <div className="grid grid-cols-1 md:grid-cols-5 text-center h-screen">
+      <div className="grid grid-cols-1 md:grid-cols-5 text-center min-h-dvh">
         <select
   value={darkMode}
   onChange={(e) => setDarkMode(e.target.value)}
   className="
 fixed
-bottom-24
+top-4
 left-4
 z-50
 text-sm
 p-2
+md:top-auto
 md:bottom-8
 md:left-5
 "
@@ -131,7 +132,7 @@ md:left-5
           setRecentHistory={setRecentHistory}
           setSelectedHistory={setSelectedHistory}
         />
-        <div className="md:col-span-4 flex flex-col p-4 md:p-6 h-screen">
+        <div className="md:col-span-4 flex flex-col p-4 md:p-6 h-dvh">
           <h1
             className="
 text-xl
@@ -174,7 +175,7 @@ to-pink-600
             </div>
 
           )}
-          <div ref={scrollToAns} className="flex-1 overflow-y-auto">
+          <div ref={scrollToAns} className="flex-1 overflow-y-auto pb-24 md:pb-4">
             <div
               className="
 dark:text-zinc-400
@@ -196,21 +197,26 @@ space-y-2
           </div>
           <div
             className="
+fixed
+bottom-0
+left-0
+right-0
+md-static
 dark:bg-zinc-700
 bg-gray-300
 w-full
 max-w-3xl
 mx-auto
-p-1
+p-2
 pr-4
-rounded-full
+rounded-t-2xl
+md:rounded-full
 border
 dark:border-white
 border-black
 flex
 items-center
-mb-6
-md:mb-4
+z-50
 "
           >
             <input
