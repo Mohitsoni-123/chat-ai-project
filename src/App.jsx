@@ -8,8 +8,8 @@ function App() {
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState([]);
   const [recentHistory, setRecentHistory] = useState(
-    JSON.parse(localStorage.getItem("history")),
-  );
+  JSON.parse(localStorage.getItem("history")) || []
+);
   const [selectedHistory, setSelectedHistory] = useState("");
   const scrollToAns = useRef();
   const [loader, setLoader] = useState(false);
@@ -21,11 +21,12 @@ function App() {
       if (question) {
         if (localStorage.getItem("history")) {
           let history = JSON.parse(localStorage.getItem("history"));
-          history=history.slice(0,15)
+          history = history.slice(0, 15);
           history = [question, ...history];
-          history=history.map((item)=>
-          item.charAt(0).toUpperCase()+item.slice(1))
-          history=[...new Set(history)]
+          history = history.map(
+            (item) => item.charAt(0).toUpperCase() + item.slice(1),
+          );
+          history = [...new Set(history)];
           localStorage.setItem("history", JSON.stringify(history));
           setRecentHistory(history);
         } else {
@@ -62,24 +63,22 @@ function App() {
       dataString = dataString.split("* ");
       dataString = dataString.map((item) => item.trim());
       // console.log(dataString)
-      setResult([
-        ...result,
-        { type: "q", text: question ? question : selectedHistory },
-        { type: "a", text: dataString },
-      ]);
+      setResult((prev) => [
+  ...prev,
+  { type: "q", text: question || selectedHistory },
+  { type: "a", text: dataString },
+]);
       setQuestion("");
 
-      setTimeout(() => {
-        scrollToAns.current.scrollTop = scrollToAns.current.scrollHeight;
-      }, 500);
       setLoader(false);
     } catch (error) {
-      console.log(error);
-    }
+  console.log(error);
+  setLoader(false);
+}
   };
 
   const isEnter = (event) => {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
       askQuestion();
     }
   };
@@ -90,20 +89,40 @@ function App() {
     }
   }, [selectedHistory]);
 
+  useEffect(() => {
+  if (scrollToAns.current) {
+    scrollToAns.current.scrollTop =
+      scrollToAns.current.scrollHeight;
+  }
+}, [result]);
+
   //Dark Mode
   const [darkMode, setDarkMode] = useState("dark");
   useEffect(() => {
-    if(darkMode==='dark'){
-      document.documentElement.classList.add('dark');
-    }else{
-      document.documentElement.classList.remove('dark');
+    if (darkMode === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
-  }, [darkMode])
+  }, [darkMode]);
 
   return (
-    <div className = {darkMode=='dark' ? 'dark' : 'light'}>
-      <div className="grid grid-cols-5 text-center">
-        <select value={darkMode} onChange={(event)=>setDarkMode(event.target.value)} className="fixed bottom-10 left-5 text-white p-4">
+    <div className={darkMode === "dark" ? "dark" : "light"}>
+      <div className="grid grid-cols-1 md:grid-cols-5 text-center h-screen">
+        <select
+  value={darkMode}
+  onChange={(e) => setDarkMode(e.target.value)}
+  className="
+fixed
+bottom-24
+left-4
+z-50
+text-sm
+p-2
+md:bottom-8
+md:left-5
+"
+>
           <option value="dark">Dark</option>
           <option value="light">Light</option>
         </select>
@@ -112,12 +131,29 @@ function App() {
           setRecentHistory={setRecentHistory}
           setSelectedHistory={setSelectedHistory}
         />
-        <div className="col-span-4 p-6 h-screen flex flex-col ">
-          <h1 className="text-4xl text-center mb-6 pb-3 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+        <div className="md:col-span-4 flex flex-col p-4 md:p-6 h-screen">
+          <h1
+            className="
+text-xl
+sm:text-2xl
+md:text-4xl
+font-semibold
+text-center
+mb-6
+bg-clip-text
+text-transparent
+bg-gradient-to-r
+from-purple-400
+to-pink-600
+"
+          >
             Hello User, Ask me Anything
           </h1>
-          {loader ? (
-            <div role="status">
+          {loader && (
+  <div
+    className="flex justify-center items-center py-4"
+    role="status"
+  >
               <svg
                 aria-hidden="true"
                 className="inline w-8 h-8 text-neutral-tertiary animate-spin fill-purple-500"
@@ -136,9 +172,21 @@ function App() {
               </svg>
               <span className="sr-only">Loading...</span>
             </div>
-          ) : null}
-          <div ref={scrollToAns} className="container h-110 ">
-            <div className="dark:text-zinc-400 text-zinc-600  text-lg overflow-y-auto  h-125 text-left px-4 space-y-6 ">
+
+          )}
+          <div ref={scrollToAns} className="flex-1 overflow-y-auto">
+            <div
+              className="
+dark:text-zinc-400
+text-zinc-600
+text-sm
+md:text-lg
+text-left
+px-4
+md:px-6
+space-y-2
+"
+            >
               <ul>
                 {result.map((item, index) => (
                   <QuestionAnswer key={index} item={item} index={index} />
@@ -146,16 +194,53 @@ function App() {
               </ul>
             </div>
           </div>
-          <div className="dark:bg-zinc-700 bg-gray-300   w-1/2 p-1 pr-5 dark:text-white text-zinc-900 m-auto rounded-4xl border dark:border-white border-black h-13 flex mt-20">
+          <div
+            className="
+dark:bg-zinc-700
+bg-gray-300
+w-full
+max-w-3xl
+mx-auto
+p-1
+pr-4
+rounded-full
+border
+dark:border-white
+border-black
+flex
+items-center
+mb-6
+md:mb-4
+"
+          >
             <input
               type="text"
               value={question}
               onKeyDown={isEnter}
               onChange={(event) => setQuestion(event.target.value)}
-              className="w-full h-full p-3 outline-none"
+              className="
+flex-1
+bg-transparent
+outline-none
+px-4
+py-2
+text-sm
+md:text-base
+"
               placeholder="Ask me Anything ?"
             />
-            <button onClick={askQuestion}>Ask</button>
+            <button
+              onClick={askQuestion}
+              className="
+px-4
+py-2
+font-semibold
+text-sm
+md:text-base
+"
+            >
+              Ask
+            </button>
           </div>
         </div>
       </div>

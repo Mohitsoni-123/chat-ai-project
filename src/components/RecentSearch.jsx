@@ -11,7 +11,7 @@ const RecentSearch = ({
   };
 
   const clearSelectedHistory = (selectedItem)=>{
-    let history = JSON.parse(localStorage.getItem("history"))
+    let history = JSON.parse(localStorage.getItem("history")) || [];
     history = history.filter((item)=>{
        if(item!=selectedItem){
         return item
@@ -22,7 +22,17 @@ const RecentSearch = ({
   }
   return (
     <>
-      <div className="col-span-1 dark:bg-zinc-700 bg-gray-500  h-screen pt-4">
+      <div
+  className="
+  hidden
+  md:block
+  md:col-span-1
+  dark:bg-zinc-700
+  bg-gray-500
+  h-screen
+  pt-4
+  "
+>
         <h1 className="dark:text-white text-black text-xl flex justify-evenly items-center">
           <span>Recent Search</span>
           <button onClick={clearHistory} className="cursor-pointer ">
@@ -38,12 +48,23 @@ const RecentSearch = ({
           </button>
         </h1>
 
-        <ul className="text-left text-zinc-400 mt-5 pl-3 overflow-auto h-110">
+        <ul
+className="
+text-left
+text-zinc-400
+mt-5
+px-3
+overflow-y-auto
+h-[calc(100vh-120px)]
+"
+>
           {recentHistory &&
             recentHistory.map((item, index) => (
-              <div className="flex justify-between items-center pr-3">
+              <div
+key={index}
+className="flex justify-between items-center px-2"
+>
                 <li
-                  key={index}
                   onClick={() => setSelectedHistory(item)}
                   className="w-full p-1 pl-2 mb-1 mr-5 dark:text-zinc-400 text-black cursor-pointer hover:dark:bg-zinc-600 hover:bg-gray-300 rounded-xl hover:dark:text-zinc-200  hover:text-black truncate"
                 >

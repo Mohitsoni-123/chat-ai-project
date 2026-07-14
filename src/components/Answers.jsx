@@ -13,14 +13,18 @@ const Answers = ({ans, totalResult, index, type}) => {
         setHeading(true);
         setAnswer(replaceHeadingStars(ans))
       }
+      else{
+        setHeading(false);
+        setAnswer(ans)
+      }
       
-    }, [])
+    }, [ans])
 
     const renderer = {
       code({node, inline, className, children, ...props}){
         const match = /Language=(\w+)/.exec(className ||'')
         return !inline && match ? (
-          <SyntaxHighLighter 
+          <SyntaxHighlighter 
             {...props}
             children={String(children).replace(/\n$/, '')}
             language={match[1]}
@@ -38,9 +42,9 @@ const Answers = ({ans, totalResult, index, type}) => {
   return (
     <>
     {
-      index == 0 && totalResult>1 ? <span className='pt-2 text-xl block dark:text-white text-black'>{answer}</span> : 
-      heading ? <span className= {'pt-2 text-xl block dark:text-white text-black'}> {answer} </span> 
-      : <span className={type=='q' ? 'pl-1' : 'pl-5'}> 
+      index === 0 && totalResult>1 ? <span className="pt-0 text-xl block dark:text-white text-black">{answer}</span> : 
+      heading ? <span className= {'pt-2 text-lg md:text-xl block dark:text-white text-black'}> {answer} </span> 
+      : <span className={type==='q' ? 'pl-1' : 'pl-5'}> 
         <ReactMarkdown components={renderer}>{answer}</ReactMarkdown>
        </span>
     }
